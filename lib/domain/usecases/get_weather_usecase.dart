@@ -1,5 +1,5 @@
-import '../../data/repositories/weather_repository.dart';
 import '../entities/weather.dart';
+import '../repositories/weather_repository.dart';
 
 /// Caso de uso que obtém o clima de uma cidade
 class GetWeatherUseCase {

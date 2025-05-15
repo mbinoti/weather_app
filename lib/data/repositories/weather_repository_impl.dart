@@ -1,11 +1,7 @@
 import '../../core/services/weatherservice.dart';
 import '../../domain/entities/weather.dart';
+import '../../domain/repositories/weather_repository.dart';
 import '../models/weather_model.dart';
-
-/// Interface que define o contrato do repositório
-abstract class WeatherRepository {
-  Future<Weather> getWeather(String cityName);
-}
 
 /// Implementação concreta do repositório
 class WeatherRepositoryImpl implements WeatherRepository {

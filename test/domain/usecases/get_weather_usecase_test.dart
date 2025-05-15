@@ -1,8 +1,9 @@
 // test/domain/usecases/get_weather_usecase_test.dart
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:weather_app/data/repositories/weather_repository.dart';
+import 'package:weather_app/data/repositories/weather_repository_impl.dart';
 import 'package:weather_app/domain/entities/weather.dart';
+import 'package:weather_app/domain/repositories/weather_repository.dart';
 
 import 'package:weather_app/domain/usecases/get_weather_usecase.dart';
 

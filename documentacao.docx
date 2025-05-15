@@ -1,0 +1,151 @@
+core/network/weather_api_client.dart
+→ Cliente HTTP (poderia opcionalmente ir para data/datasources/ 
+se você quiser separação ainda mais forte)
+
+core/services/weather_service.dart
+→ Fachada para o cliente HTTP
+
+data/models/weather_model.dart
+→ Adapta o JSON em entidade
+
+data/repositories/weather_repository_impl.dart
+→ Implementa a interface de domínio
+
+domain/entities/weather.dart
+→ Entidade principal
+
+domain/repositories/weather_repository.dart
+→ Interface do repositório
+
+domain/usecases/get_weather_usecase.dart
+→ Caso de uso do domínio
+
+presentation/cubits/weather_cubit.dart
+→ Estado e lógica da UI
+
+presentation/screens/weather_screen.dart
+→ Tela principal
+
+presentation/widgets/weather_card.dart
+→ Widget reutilizável
+
+main.dart
+→ Injeção manual de dependências e Bootstrap do app
+
+-----
+
+🧱 VISÃO GERAL – Clean Architecture no Flutter
+
+A Clean Architecture propõe separar responsabilidades por camadas:
+presentation → domain → data → external/core
+
+Ela é útil para manter o app testável, escalável e de fácil manutenção.
+A ideia é que as camadas internas (domain) não dependam das 
+externas (presentation, data).
+
+📁 ESTRUTURA COMPLETA E EXPLICAÇÃO
+
+lib/
+Pasta principal do app Flutter.
+
+📁 presentation/ → Interface com o usuário
+Camada que lida com a UI (User Interface) e interações com o usuário. 
+Nunca deve conter lógica de negócio.
+
+📄 screens/
+Contém as telas visuais do app, como WeatherScreen, HomeScreen, etc.
+	•	Exemplo: WeatherScreen tem campos de texto, botões e BlocBuilder.
+
+📄 cubits/ (ou blocs/)
+Contém classes de gerenciamento de estado, como Cubit, Bloc, etc.
+	•	Exemplo: WeatherCubit controla o estado da tela: carregando,
+     erro, ou clima carregado.
+
+📄 widgets/
+Componentes reutilizáveis de UI, como cards, botões, caixas de entrada.
+	•	Exemplo: WeatherCard exibe cidade, temperatura e descrição.
+
+📁 domain/ → Regras de negócio
+Camada central e mais pura. Não depende de nenhuma outra. 
+Aqui estão as entidades, regras e contratos do app.
+
+📄 entities/
+Modelos puros que representam o domínio do negócio.
+	•	Exemplo: Weather com cityName, temperature, description.
+
+📄 repositories/
+Interfaces (contratos) que descrevem o que a aplicação precisa de dados, 
+sem se importar de onde vêm (API, banco, cache…).
+	•	Exemplo: WeatherRepository define Future<Weather> getWeather(String cityName).
+
+📄 usecases/
+Representam ações específicas da regra de negócio.
+	•	Exemplo: GetWeatherUseCase usa o repositório para buscar o clima de uma cidade.
+
+📁 data/ → Implementações concretas
+Camada que implementa os contratos do domínio. 
+Aqui lidamos com API, bancos, arquivos etc.
+
+📄 models/
+Classes que adaptam dados brutos (JSON) em entidades do domínio.
+	•	Exemplo: WeatherModel.fromJson converte o JSON em uma instância
+     de Weather.
+
+📄 repositories/
+Implementações das interfaces do domínio.
+	•	Exemplo: WeatherRepositoryImpl implementa WeatherRepository e usa um service para buscar dados da API.
+
+📄 datasources/ (opcional)
+Se quiser separar ainda mais, você pode colocar aqui classes 
+como WeatherApiClient, que interagem diretamente com o 
+back-end ou banco local.
+
+📁 core/ → Código compartilhado e utilitários
+Contém classes compartilhadas e utilitárias, como chamadas HTTP, 
+injeção de dependência, serviços, constantes, temas etc.
+
+📄 network/
+Classes responsáveis por se comunicar com serviços externos.
+	•	Exemplo: WeatherApiClient chama a OpenWeather API e retorna JSON.
+
+📄 services/
+Facades ou wrappers que simplificam o uso de network/.
+	•	Exemplo: WeatherService abstrai WeatherApiClient e prepara os dados para os repositórios.
+
+📄 utils/
+Funções, validadores, extensões e helpers reutilizáveis.
+
+📄 themes/
+Configurações de tema para o app: cores, fontes, estilos etc.
+
+
+📄 main.dart → Bootstrap do app
+
+Responsável por:
+	•	Criar instâncias (injeção manual ou via get_it)
+	•	Iniciar o app
+	•	Configurar o BlocProvider (ou Riverpod, etc)
+
+🔄 Fluxo de execução (exemplo real)
+
+Usuário digita cidade na UI
+ ↓
+WeatherCubit chama useCase("Franca")
+ ↓
+UseCase chama WeatherRepository.getWeather()
+ ↓
+WeatherRepositoryImpl chama WeatherService.getWeatherData()
+ ↓
+WeatherService chama WeatherApiClient.fetchWeather()
+ ↓
+API responde com JSON
+ ↓
+WeatherModel.fromJson converte o JSON
+ ↓
+WeatherRepositoryImpl retorna a entidade Weather
+ ↓
+UseCase retorna o Weather para o Cubit
+ ↓
+Cubit emite novo estado com clima
+ ↓
+UI (WeatherScreen) exibe WeatherCard

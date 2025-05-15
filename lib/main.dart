@@ -5,7 +5,7 @@ import 'package:weather_app/presentation/cubits/weather_cubit.dart';
 
 import 'core/network/weather_api_client.dart';
 import 'core/services/weatherservice.dart';
-import 'data/repositories/weather_repository.dart';
+import 'data/repositories/weather_repository_impl.dart';
 import 'domain/usecases/get_weather_usecase.dart';
 import 'presentation/screens/weather_screen.dart';
 

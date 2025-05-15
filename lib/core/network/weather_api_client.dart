@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:weather_app/core/config/app_config.dart';
 
 class WeatherApiClient {
   final http.Client httpClient;
@@ -7,7 +8,9 @@ class WeatherApiClient {
 
   Future<Map<String, dynamic>> fetchWeather(String cityName) async {
     final url = Uri.parse(
-        'https://api.openweathermap.org/data/2.5/weather?q=$cityName&appid=a665b29a2c6e1dd41ffc791e0d7a8263&units=metric');
+      '${AppConfig.baseUrl}/weather?q=$cityName&appid='
+      '${AppConfig.apiKey}&units=metric',
+    );
 
     final response = await httpClient.get(url);
 
